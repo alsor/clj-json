@@ -9,7 +9,8 @@
     (.configure SmileGenerator$Feature/ENCODE_BINARY_AS_7BIT false)))
 
 (defn generate-binary
-  {:tag (Class/forName "[B") ;; I don't know why, but using just "bytes" here causing problems
+  {:tag (Class/forName "[B") ;; I don't know why, but using either "bytes" or "Byte/TYPE" here causing problems
+                             ;; in usages like (alength (generate-binary {:a "abc"}))
    :doc "Returns a byte[] with SMILE-encoded JSON for the given Clojure object"}
   [obj]
   (let [os (ByteArrayOutputStream.)
