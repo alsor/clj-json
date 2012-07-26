@@ -26,4 +26,13 @@
 
 (deftest test-parsed-seq
   (let [br (BufferedReader. (StringReader. "1\n2\n3\n"))]
-    (is (= (list 1 2 3) (json/parsed-seq br)))))
+    (is (= (list 1 2 3) (json/parsed-seq br))))
+  (let [br (BufferedReader. (StringReader. "{\"a\": 1} {\"b\": 2}"))]
+    (is (= {"a" 1} (first (json/parsed-seq br))))))
+
+(deftest test-parse-array-content
+  (let [br (BufferedReader. (StringReader. "[{\"a\": 1}, {\"b\": 2}]"))]
+    (is (= [{"a" 1} {"b" 2}] (json/parse-array-content br))))
+  (let [br (BufferedReader. (StringReader. "[{\"a\": 1}, {\"b\": 2}]"))]
+    (is (= {"a" 1} (first (json/parse-array-content br))))))
+

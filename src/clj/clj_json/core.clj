@@ -36,3 +36,13 @@
   "Returns a lazy seq of Clojure objects corresponding to the JSON read from
   the given reader. The seq continues until the end of the reader is reached."
   (parsed-seq* (.createJsonParser factory reader) (or keywords false)))
+
+(defn- parse-array-content* [#^JsonParser parser keywords]
+  (let [eof (Object.)]
+    (lazy-seq
+      (let [elem (JsonExt/parseAsArray parser keywords eof)]
+        (if-not (identical? elem eof)
+          (cons elem (parse-array-content* parser keywords)))))))
+
+(defn parse-array-content [#^BufferedReader reader & [keywords]]
+  (parse-array-content* (.createJsonParser factory reader) (or keywords false)))
